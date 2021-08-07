@@ -1,35 +1,87 @@
-" ============================================================
-" oceanicnext
-" Author: Mike Hartington
-" ============================================================
+" ----- Config ------------------------------------------------------------- {{{
 
-let s:p = {"normal": {}, "inactive": {}, "insert": {}, "replace": {}, "visual": {}, "tabline": {} }
+if get(g:, "oceanic_next_terminal_bold", 1)
+  let s:bold = "bold"
+else
+  let s:bold = ""
+endif
 
-let s:p.normal.left = [[["#ffffff", 15], ["#6699cc", 68]], [["#c0c5ce", 15], ["#343d46", 243]], [["#1b2b34", 15], ["#99c794", 243]], [["#c0c5ce", 15], ["#343d46", 243]]]
-let s:p.normal.middle = [[["#ffffff", 15], ["#343d46", 237]]]
-let s:p.normal.right = [[["#ffffff", 15], ["#65737e", 243]], [["#ffffff", 15], ["#65737e", 243]]]
-let s:p.normal.error = [[["#ffffff", 15], ["#ec5f67", 203]]]
-let s:p.normal.warning = [[["#ffffff", 15], ["#fac863", 221]]]
+" }}}
 
-let s:p.inactive.left = [[["#1b2b34", 253], ["#65737e", 243]], [["#d8dee9", 253], ["#343d46", 237]]]
-let s:p.inactive.middle = [[["#65737e", 243], ["#343d46", 237]]]
-let s:p.inactive.right = [[["#d8dee9", 253], ["#343d46", 237]], [["#d8dee9", 253], ["#65737e", 243]]]
+" ----- Colors ------------------------------------------------------------- {{{
 
-let s:p.insert.left = [[["#ffffff", 15], ["#99c794", 114]], [["#ffffff", 15], ["#65737e", 243]]]
-let s:p.insert.middle = [[["#ffffff", 15], ["#343d46", 237]]]
-let s:p.insert.right = [[["#ffffff", 15], ["#65737e", 243]], [["#ffffff", 15], ["#99c794", 114]]]
+" Oceanic foreground shades
+let s:fg1 = ["#405860", "239"]
+let s:fg3 = ["#adb5c0", "249"]
+let s:fg4 = ["#d8dee9", "253"]
+let s:fg  = s:fg4
 
-let s:p.replace.left = [[["#ffffff", 15], ["#ec5f67", 203]], [["#ffffff", 15], ["#65737e", 243]]]
-let s:p.replace.middle = [[["#ffffff", 15], ["#343d46", 237]]]
-let s:p.replace.right = [[["#ffffff", 15], ["#65737e", 243]], [["#ffffff", 15], ["#ec5f67", 203]]]
+" Oceanic background  shades
+let s:bg1 = ["#17262e", "233"]
+let s:bg3 = ["#1b2b34", "235"]
+let s:bg  = s:bg3
 
-let s:p.visual.left = [[["#ffffff", 15], ["#f99157", 209]], [["#ffffff", 15], ["#65737e", 243]]]
-let s:p.visual.middle = [[["#ffffff", 15], ["#343d46", 237]]]
-let s:p.visual.right = [[["#ffffff", 15], ["#65737e", 243]], [["#ffffff", 15], ["#f99157", 209]]]
+" Oceanic vivid base colors
+let s:red    = ["#ec5f67", "167"]
+let s:orange = ["#f99157", "209"]
+let s:yellow = ["#fac863", "221"]
+let s:green  = ["#99c794", "108"]
+let s:lilac  = ["#c594c5", "176"]
 
-let s:p.tabline.left = [[["#65737e", 243], ["#343d46", 237]]]
-let s:p.tabline.tabsel = [[["#c0c5ce", 15], ["#1b2b34", 243]]]
-let s:p.tabline.middle = [[["#65737e", 243], ["#343d46", 237]]]
-let s:p.tabline.right = [[["#65737e", 243], ["#343d46", 237]]]
+" Custom shades for lightline
+let s:b1 = ["#243945", "236"]
+let s:b2 = ["#2d4857", "237"]
+let s:b3 = ["#355466", "239"]
 
-let g:lightline#colorscheme#oceanicnext#palette = lightline#colorscheme#flatten(s:p)
+" Custom shades for inactive (unfocused) lightline
+let s:ib1 = ["#1d2f39", "234"]
+let s:ib2 = ["#20343f", "236"]
+let s:ib3 = ["#233845", "237"]
+let s:ib4 = ["#767c84", "244"]
+let s:ib5 = ["#5e666f", "241"]
+
+" Custom blues for insert mode
+let s:blue1 = ["#295a8a",  "25"]
+let s:blue2 = ["#224b73",  "24"]
+let s:blue3 = ["#86add5", "110"]
+
+" }}}
+
+" ----- Lightline ---------------------------------------------------------- {{{
+
+let s:p = {"normal": {}, "inactive": {}, "insert": {}, "replace": {},
+  \ "visual": {}, "command": {}, "tabline": {}}
+
+let s:p.normal.left     = [[s:b1, s:green], [s:fg, s:b1], [s:fg, s:b2]]
+let s:p.normal.middle   = [[s:fg3, s:b1]]
+let s:p.normal.right    = [[s:fg, s:b3], [s:fg, s:b2]]
+let s:p.normal.error    = [[s:b1, s:red]]
+let s:p.normal.warning  = [[s:b1, s:yellow]]
+
+let s:p.inactive.left   = [[s:ib4, s:ib1], [s:ib4, s:ib2]]
+let s:p.inactive.middle = [[s:ib5, s:ib1]]
+let s:p.inactive.right  = [[s:ib4, s:ib3], [s:ib4, s:ib2]]
+
+let s:p.insert.left     = [[s:blue2, s:fg, s:bold], [s:fg, s:blue1]]
+let s:p.insert.middle   = [[s:blue3, s:blue2]]
+let s:p.insert.right    = [[s:blue2, s:fg], [s:fg, s:blue1]]
+
+" Inherits from 'insert', hence the 'normal' copy/override
+let s:p.replace.left    = [[s:b1, s:red, s:bold], [s:fg, s:b2]]
+let s:p.replace.middle  = copy(s:p.normal.middle)
+let s:p.replace.right   = copy(s:p.normal.right)
+
+let s:p.visual.left     = [[s:b1, s:orange, s:bold], [s:fg, s:b2]]
+
+let s:p.command.left    = [[s:b1, s:lilac, s:bold], [s:fg, s:b2]]
+
+let s:p.tabline.left    = [[s:fg1, s:bg1]] " hl-TabLine
+let s:p.tabline.tabsel  = [[["#bdc2cc", "250"], s:bg, s:bold]] " hl-TabLineSel
+let s:p.tabline.middle  = [[s:fg3, s:bg1]] " hl-TabLineFill
+let s:p.tabline.right   = [[s:fg3, s:bg]] " Close button
+
+let g:lightline#colorscheme#oceanicnext#palette
+  \ = lightline#colorscheme#flatten(s:p)
+
+" }}}
+
